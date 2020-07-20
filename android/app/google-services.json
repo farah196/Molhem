@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "668825691467",
+    "firebase_url": "https://molhem-42efe.firebaseio.com",
+    "project_id": "molhem-42efe",
+    "storage_bucket": "molhem-42efe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:668825691467:android:1c3de287d3a06d501934ce",
+        "android_client_info": {
+          "package_name": "com.molhem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "668825691467-t0qg69s8iggnhu128qpva3ssgt449m29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChlMc7EG16ok1YAbJ6qeAd-Jn3Eb0sPcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "668825691467-t0qg69s8iggnhu128qpva3ssgt449m29.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "668825691467-i6ecpc9fcfmljcno785uq4gfsgogafn8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.molhem"
+              }
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-6139571964236523~9864854604"
+    }
+  ],
+  "configuration_version": "1"
+}
