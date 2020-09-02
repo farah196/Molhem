@@ -30,8 +30,8 @@ class _BottomNavigationBarControllerState
 
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
     type: BottomNavigationBarType.fixed,
-            selectedItemColor: Color(0xFFF9EFED),
-            backgroundColor: Color(0xFFE6C4BB),
+            selectedItemColor: Color(0xFFf2fbfc),
+            backgroundColor: Color(0xFFa4ced4),
     onTap: (int index) => setState(() => _selectedIndex = index),
     currentIndex: selectedIndex,
     items: const <BottomNavigationBarItem>[

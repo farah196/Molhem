@@ -4,8 +4,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:molhem/helper/DatabaseProvider.dart';
 import 'package:molhem/models/QuoteModel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math' as math;
+
 
 class Favourite extends StatefulWidget {
   @override
@@ -27,8 +26,8 @@ class FavouriteState extends State<Favourite> {
         decoration: BoxDecoration(
           gradient: new LinearGradient(
               colors: [
-                Color(0xFFF9EFED),
-                Color(0xFFE6C4BB),
+                Color(0xFFf2fbfc),
+                Color(0xFFa4ced4),
               ],
               begin: const FractionalOffset(0.0, 1.0),
               end: const FractionalOffset(1.0, 0.0),
@@ -69,9 +68,16 @@ class FavouriteState extends State<Favourite> {
                           return Dismissible(
                               key: UniqueKey(),
                               background: new Container(
+                                alignment: Alignment.centerRight,
+                                padding:const EdgeInsets.only(
+                                  right: 20.0)  ,
                                 margin: const EdgeInsets.only(
                                     top: 10.0, right: 20.0, left: 15.0),
-                                color: Colors.red,
+                                color: Colors.red[900],
+                                child:  Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
                               ),
                               onDismissed: (direction) {
                                 DatabaseProvider.db.deleteQuoteById(item.id);
@@ -125,7 +131,7 @@ class FavouriteState extends State<Favourite> {
     if (Platform.isIOS) {
       return 'ca-app-pub-6139571964236523/4410071699';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111';
+      return 'ca-app-pub-6139571964236523/9729370656';
     }
     return null;
   }

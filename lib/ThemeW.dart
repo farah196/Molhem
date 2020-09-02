@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 class ThemeW extends StatefulWidget {
   @override
   ThemeWState createState() => ThemeWState();
@@ -14,6 +15,7 @@ class ThemeW extends StatefulWidget {
 
 class ThemeWState extends State<ThemeW> {
   AdmobInterstitial interstitialAd;
+
   @override
   void initState() {
     interstitialAd = AdmobInterstitial(
@@ -23,36 +25,38 @@ class ThemeWState extends State<ThemeW> {
       },
     );
     interstitialAd.load();
-
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
-        backgroundColor: Colors.transparent,
+      backgroundColor:Color(0xFFa4ced4) ,
+
     ),
     body: Container(
-    decoration: new BoxDecoration(
-    gradient: new LinearGradient(
-    colors: [
-    Colors.grey[100],
-    Colors.grey[300],
-    ],
-    begin: const FractionalOffset(0.0, 1.0),
-    end: const FractionalOffset(1.0, 0.0),
-    stops: [0.0, 1.0],
-    tileMode: TileMode.mirror),
-    ),
-    child: Container(
+        decoration: BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+                Color(0xFFf2fbfc),
+                Color(0xFFa4ced4),
+              ],
+              begin: const FractionalOffset(0.0, 1.0),
+              end: const FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.mirror),
+        ),
+
+        child: Container(
     margin: EdgeInsets.only(bottom: 50),
 
     child:GridView.count(
     crossAxisCount: 2,
-    childAspectRatio: 1.0,
-    padding: const EdgeInsets.all(4.0),
-    mainAxisSpacing: 4.0,
-    crossAxisSpacing: 4.0,
+    childAspectRatio: .85,
+    padding: const EdgeInsets.all(2.0),
+    mainAxisSpacing: 2.0,
+    crossAxisSpacing: 2.0,
 
         children: images.map((String img) {
           return new GridTile(
@@ -60,9 +64,9 @@ class ThemeWState extends State<ThemeW> {
                   width: 200.0,
                   height: 800.0,
               child:  GestureDetector(
-                  onTap: ()=>  {  setIndexBackground(images.indexOf(img)),  Navigator.pop(context,true),  },
-
-
+                  onTap: ()=>  {  Timer(Duration(seconds: 2),()async {
+                    setIndexBackground(images.indexOf(img));  Navigator.pop(context,true);
+                    }), },
 
             child: Card(
                 elevation: 5,
@@ -73,7 +77,7 @@ class ThemeWState extends State<ThemeW> {
                   Image.asset(
                     img,
                     gaplessPlayback: true,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                   ),
                 )
             ),
@@ -83,31 +87,23 @@ class ThemeWState extends State<ThemeW> {
     )),
     );
   }
-//  navigateTheme(BuildContext context,int index) {
-//   // QuoteModel routeIndex = QuoteModel(index);
-//
-//    Navigator.push(
-//      context,
-//      MaterialPageRoute(
-//        builder: (context) => Home(),
-//        settings: RouteSettings(
-//          arguments: routeIndex,
-//        ),
-//      ),
-//    );
-//  }
-  setIndexBackground(int index) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = 'index_background';
-    final value = index;
-    prefs.setInt(key, value);
-    loadAds ();
+
+  setIndexBackground(int index)async{
+
+      loadAds ();
+      final prefs = await SharedPreferences.getInstance();
+      final key = 'index_background';
+      final value = index;
+      prefs.setInt(key, value);
+
   }
+
+
   String getInterstitialAdUnitId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/4411468910';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/1033173712';
+      return 'ca-app-pub-6139571964236523/9491860640';
     }
     return null;
   }
