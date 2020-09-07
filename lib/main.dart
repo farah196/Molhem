@@ -1,26 +1,34 @@
 
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'dart:async';
 import 'dart:io';
 import 'BottomNavigationBarController.dart';
 
 
 void main() {
+  Crashlytics.instance.enableInDevMode = true;
 
-  WidgetsFlutterBinding.ensureInitialized();
-  Admob.initialize(getAppId() );
-  runApp(MaterialApp(
-    theme: ThemeData(
-      primarySwatch: primary,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-    ),
-    debugShowCheckedModeBanner: false,
-    home: BottomNavigationBarController(),
-  ),
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
 
-  );
+  runZoned(() {
+    WidgetsFlutterBinding.ensureInitialized();
+    Admob.initialize(getAppId() );
+    runApp(MaterialApp(
+      theme: ThemeData(
+        primarySwatch: primary,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: BottomNavigationBarController(),
+    ));
+
+    }, onError: Crashlytics.instance.recordError);
+
+
+
 
 }
 String getAppId() {

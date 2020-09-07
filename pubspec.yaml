@@ -44,6 +44,7 @@ dev_dependencies:
     sdk: flutter
   firebase_core: ^0.4.0+9
   firebase_database: ^3.1.1
+  firebase_crashlytics: 0.1.4+1
   cloud_firestore: ^0.13.3
   flutter_staggered_animations: ^0.1.2
   custom_splash : ^0.0.2

@@ -21,7 +21,7 @@ class ReminderState extends State<Reminder> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   String dropdownValue = '1';
 
-  // TimeOfDay selectedTime = TimeOfDay.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
   String repeateTime = "حدد الوقت";
   static List<String> list = List();
 
@@ -184,36 +184,7 @@ class ReminderState extends State<Reminder> {
                                             margin: const EdgeInsets.only(
                                                 right: 20.0),
                                             child: OutlineButton(
-                                                onPressed: () async {
-                                                  final selectedTime =
-                                                      await showTimePicker(
-                                                    context: context,
-                                                    initialTime:
-                                                        TimeOfDay.now(),
-                                                  );
-
-                                                  if (selectedTime != null) {
-                                                    final prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    final key =
-                                                        'repeate_notification';
-
-                                                    setState(() {
-                                                      repeateTime = selectedTime
-                                                              .hour
-                                                              .toString() +
-                                                          ":" +
-                                                          selectedTime.minute
-                                                              .toString();
-                                                      prefs.setString(
-                                                          key, repeateTime);
-                                                      showNotificationDaily(
-                                                          selectedTime.hour,
-                                                          selectedTime.minute);
-                                                    });
-                                                  }
-                                                },
+                                                onPressed:() => _selectTime(context),
                                                 child: Text(
                                                   repeateTime,
                                                   textAlign: TextAlign.center,
@@ -256,6 +227,28 @@ class ReminderState extends State<Reminder> {
       repeateTime = "اختر الوقت";
     else
       repeateTime = value;
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked_s = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            child: child,
+          );
+        });
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'repeate_notification';
+
+    if (picked_s != null && picked_s != selectedTime)
+      setState(() {
+        selectedTime = picked_s;
+        repeateTime = picked_s.hour.toString() + ":" + picked_s.minute.toString();
+        prefs.setString(key, repeateTime);
+        showNotificationDaily(selectedTime.hour, selectedTime.minute);
+      });
   }
 
   _requestIOSPermission() {

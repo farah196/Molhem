@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'helper/DatabaseProvider.dart';
 import 'helper/LifecycleEventHandler.dart';
 
+import 'main.dart';
 class Home extends StatefulWidget {
   @override
   HomeState createState() => new HomeState();
@@ -80,16 +81,53 @@ class HomeState extends State<Home> {
         ),
         child: Column(
           //   mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
+
+
           children: <Widget>[
+
+
             Container(
-              margin: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
-              alignment: Alignment.topRight,
-              child: Image.asset(
-                'assets/logo/logopng.png',
-                height: 100,
-                width: 100,
-              ),
+              margin: EdgeInsets.symmetric(vertical: 20.0),
+           color: primary,
+
+
+              child: Row(
+
+
+
+                children: <Widget>[
+
+
+                  Container(
+                    margin: const EdgeInsets.only(left: 150.0),
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'assets/logo/logopng.png',
+                      height: 80,
+                      width: 80,
+                    ),
+                  ),
+      Container(
+          margin: const EdgeInsets.only(left: 130.0),
+                 child : Align(
+                    alignment: Alignment.centerRight,
+
+                    child: IconButton(
+                      icon: Icon(Icons.brush),
+                      color: Colors.white,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext
+                                context) =>
+                                    ThemeW()));
+                      },
+                    ),
+                  ),
+      ),
+                ]),
+
             ),
             StreamBuilder(
                 stream: Firestore.instance.collection('quot').snapshots(),
@@ -143,8 +181,11 @@ class HomeState extends State<Home> {
                                   width: MediaQuery.of(context).size.width,
                                   margin:
                                       EdgeInsets.symmetric(horizontal: 20.0),
+
+
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
+
                                     image: DecorationImage(
                                       image:
                                           AssetImage(images[backgroundIndex]),
@@ -159,37 +200,13 @@ class HomeState extends State<Home> {
                                         decoration: BoxDecoration(
                                           borderRadius: new BorderRadius.only(
                                             topLeft:
-                                                const Radius.circular(15.0),
+                                            const Radius.circular(15.0),
                                             topRight:
-                                                const Radius.circular(15.0),
+                                            const Radius.circular(15.0),
                                           ),
-                                          gradient: new LinearGradient(
-                                              colors: [
-                                                Color(0x00000000),
-                                                Color(0x80000000),
-                                              ],
-                                              begin: const FractionalOffset(
-                                                  1.0, 1.0),
-                                              end: const FractionalOffset(
-                                                  1.0, 0.0),
-                                              stops: [0.0, 1.0],
-                                              tileMode: TileMode.clamp),
+
                                         ),
-                                        child: Align(
-                                          alignment: Alignment.topRight,
-                                          child: IconButton(
-                                            icon: Icon(Icons.brush),
-                                            color: Colors.white,
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          ThemeW()));
-                                            },
-                                          ),
-                                        ),
+
                                       ),
                                       Expanded(
                                         child: Screenshot(
@@ -287,6 +304,7 @@ class HomeState extends State<Home> {
                                                         icon: Icon(iconData),
                                                         color: Colors.white,
                                                         onPressed: () async {
+
                                                           QuoteModel addToFav =
                                                               QuoteModel(
                                                                   id: document
@@ -322,6 +340,8 @@ class HomeState extends State<Home> {
                                                     return new CircularProgressIndicator();
                                                   }
                                                 })
+
+
                                           ]),
                                         ),
                                       )
@@ -332,6 +352,14 @@ class HomeState extends State<Home> {
                     }).toList(),
                   ));
                 }),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  AdmobBanner(
+                    adUnitId: getBannerAdUnitId(),
+                    adSize: AdmobBannerSize.BANNER,
+                  ),
+                ]),
           ],
         ),
       ),

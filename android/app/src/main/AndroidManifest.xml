@@ -20,6 +20,10 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6139571964236523~9864854604"/>
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="true" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
