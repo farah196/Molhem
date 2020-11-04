@@ -10,7 +10,7 @@ class BottomNavigationBarController extends StatefulWidget {
 
 class _BottomNavigationBarControllerState
     extends State<BottomNavigationBarController> {
-
+  int _selectedIndex = 2;
   final List<Widget> pages = [
 
     Favourite(
@@ -26,7 +26,7 @@ class _BottomNavigationBarControllerState
 
   final PageStorageBucket bucket = PageStorageBucket();
 
-  int _selectedIndex = 2;
+
 
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
     type: BottomNavigationBarType.fixed,

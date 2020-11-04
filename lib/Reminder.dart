@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:molhem/BottomNavigationBarController.dart';
-import 'package:molhem/Home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Reminder extends StatefulWidget {
   @override
@@ -31,7 +31,7 @@ class ReminderState extends State<Reminder> {
     getList();
     getRepeateTime();
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings('@mipmap/ic_stat_lump');
+    var android = new AndroidInitializationSettings('ic_stat_lump');
     var iOS = new IOSInitializationSettings();
     if (Platform.isIOS) {
       _requestIOSPermission();
@@ -55,10 +55,20 @@ class ReminderState extends State<Reminder> {
 
   @override
   Widget build(BuildContext context) {
+
+    final appBar = AppBar(
+      centerTitle: true,
+      title: Image.asset('assets/textlogo.png',width: 70,height: 40),
+    );
     getRepeateTime();
     getList();
     return Scaffold(
+      appBar: appBar,
         body: Container(
+        height:  (MediaQuery.of(context).size.height -
+            appBar.preferredSize.height -
+            MediaQuery.of(context).padding.top) *
+        1.2,
             decoration: BoxDecoration(
               gradient: new LinearGradient(
                   colors: [
@@ -80,7 +90,8 @@ class ReminderState extends State<Reminder> {
                               left: 20.0, right: 20.0, top: 90.0, bottom: 90.0),
                           decoration: new BoxDecoration(
                               color: Colors.white,
-                              boxShadow: [
+                              boxShadow:
+                              [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.2),
                                   spreadRadius: 5,
@@ -229,7 +240,7 @@ class ReminderState extends State<Reminder> {
       repeateTime = value;
   }
 
-  Future<Null> _selectTime(BuildContext context) async {
+  void _selectTime(BuildContext context) async {
     final TimeOfDay picked_s = await showTimePicker(
         context: context,
         initialTime: selectedTime,
@@ -242,13 +253,12 @@ class ReminderState extends State<Reminder> {
     final prefs = await SharedPreferences.getInstance();
     final key = 'repeate_notification';
 
-    if (picked_s != null && picked_s != selectedTime)
-      setState(() {
-        selectedTime = picked_s;
-        repeateTime = picked_s.hour.toString() + ":" + picked_s.minute.toString();
-        prefs.setString(key, repeateTime);
-        showNotificationDaily(selectedTime.hour, selectedTime.minute);
-      });
+    if (picked_s != null && picked_s != selectedTime) {
+      selectedTime = picked_s;
+      repeateTime = picked_s.hour.toString() + ":" + picked_s.minute.toString();
+      prefs.setString(key, repeateTime);
+      showNotificationDaily(selectedTime.hour, selectedTime.minute);
+    }
   }
 
   _requestIOSPermission() {
@@ -279,7 +289,7 @@ class ReminderState extends State<Reminder> {
     return list;
   }
 
-  showNotificationDaily(int hour, int minute) async {
+  Future<void> showNotificationDaily(int hour, int minute) async {
     var time = new Time(hour, minute, 0);
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'repeatDailyAtTime channel id',
@@ -288,7 +298,7 @@ class ReminderState extends State<Reminder> {
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    final _random = new Random();
+    var _random = new Random();
     var element = list[_random.nextInt(list.length)];
     await flutterLocalNotificationsPlugin.showDailyAtTime(
         0, 'إقتباس مُلهمي', element, time, platformChannelSpecifics);

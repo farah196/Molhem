@@ -1,20 +1,27 @@
 
 import 'package:admob_flutter/admob_flutter.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'dart:io';
 import 'BottomNavigationBarController.dart';
 
 
+
+
+
 void main() {
   Crashlytics.instance.enableInDevMode = true;
-
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
 
-  runZoned(() {
+  runZoned(()  {
     WidgetsFlutterBinding.ensureInitialized();
+
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+
     Admob.initialize(getAppId() );
     runApp(MaterialApp(
       theme: ThemeData(

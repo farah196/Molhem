@@ -2,11 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-6139571964236523~6106296741</string>
-    <key>io.flutter.embedded_views_preview</key>
-    <true/>
-    <key>NSPhotoLibraryAddUsageDescription</key>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6139571964236523~6106296741</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

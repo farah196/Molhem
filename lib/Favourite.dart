@@ -6,6 +6,8 @@ import 'package:molhem/helper/DatabaseProvider.dart';
 import 'package:molhem/models/QuoteModel.dart';
 
 
+
+
 class Favourite extends StatefulWidget {
   @override
   FavouriteState createState() => FavouriteState();
@@ -20,9 +22,18 @@ class FavouriteState extends State<Favourite> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      centerTitle: true,
+      title: Image.asset('assets/textlogo.png',width: 70,height: 40),
+    );
     return Scaffold(
-
+      appBar: appBar,
       body: Container(
+        height:  (MediaQuery.of(context).size.height -
+            appBar.preferredSize.height -
+            MediaQuery.of(context).padding.top) *
+            1.2,
+
         decoration: BoxDecoration(
           gradient: new LinearGradient(
               colors: [

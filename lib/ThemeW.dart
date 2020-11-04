@@ -4,8 +4,10 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'data.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+
 class ThemeW extends StatefulWidget {
   @override
   ThemeWState createState() => ThemeWState();
@@ -30,12 +32,19 @@ class ThemeWState extends State<ThemeW> {
   @override
   Widget build(BuildContext context) {
 
+    final appBar = AppBar(
+      centerTitle: true,
+      title: Image.asset('assets/textlogo.png',width: 70,height: 40),
+    );
     return Scaffold(
-        appBar: AppBar(
-      backgroundColor:Color(0xFFa4ced4) ,
+        appBar: appBar,
 
-    ),
+
     body: Container(
+        height:  (MediaQuery.of(context).size.height -
+            appBar.preferredSize.height -
+            MediaQuery.of(context).padding.top) *
+            1.2,
         decoration: BoxDecoration(
           gradient: new LinearGradient(
               colors: [
