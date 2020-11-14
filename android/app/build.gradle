@@ -18,7 +18,7 @@ if (flutterVersionCode == null) {
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '2.0'
+    flutterVersionName = '2.1'
 }
 
 apply plugin: 'com.android.application'
@@ -42,7 +42,7 @@ android {
         release {
             keyAlias 'key'
             keyPassword 'molheme@111'
-            storeFile file('/Users/forsa_1/Documents/Molheme')
+            storeFile file('/Users/forsa_1/Documents/Flutter/Molheme')
             storePassword 'molheme@111'
         }
     }
@@ -53,7 +53,7 @@ android {
 
         targetSdkVersion 29
         versionCode 21
-        versionName "2.0.0"
+        versionName "2.1.0"
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

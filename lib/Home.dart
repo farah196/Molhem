@@ -23,7 +23,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  CarouselSlider carouselSlider;
+ CarouselSlider carouselSlider;
   int _current = 0;
   List<String> quoteList = List();
   List<String> saidList = List();
@@ -55,28 +55,28 @@ class HomeState extends State<Home> {
     //   print("completed");
     //   setState(() {});
     // });
-   // var a = _firebaseMessaging.getToken().toString();
+    // var a = _firebaseMessaging.getToken().toString();
 
-        _firebaseMessaging.getToken().then((token) => print("Token : "+token));
+    _firebaseMessaging.getToken().then((token) => print("Token : " + token));
 
     interstitialAd = AdmobInterstitial(
-    adUnitId: getInterstitialAdUnitId(),
-    listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-    if (event == AdmobAdEvent.closed) interstitialAd.load();
-    },
+      adUnitId: getInterstitialAdUnitId(),
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) interstitialAd.load();
+      },
     );
     interstitialAd.load();
 
     WidgetsBinding.instance.addObserver(
-    LifecycleEventHandler(resumeCallBack: () async => getIndex()));
-    }
+        LifecycleEventHandler(resumeCallBack: () async => getIndex()));
+  }
 
   void getMessage() {
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
-          print('on message $message');
-          setState(() => _message = message["notification"]["title"]);
-        }, onResume: (Map<String, dynamic> message) async {
+      print('on message $message');
+      setState(() => _message = message["notification"]["title"]);
+    }, onResume: (Map<String, dynamic> message) async {
       print('on resume $message');
       setState(() => _message = message["notification"]["title"]);
     }, onLaunch: (Map<String, dynamic> message) async {
@@ -90,449 +90,427 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     getIndex();
 
-
     // Navigator.pop(context);
-    return LayoutBuilder(
-        builder: (ctx, constraints) {
-          final appBar = AppBar(
-            centerTitle: true,
-            title: Image.asset(
-                'assets/textlogo.png', width: constraints.maxWidth * 0.2,
-                height: constraints.maxHeight * 0.05),
-
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.brush),
-                color: Colors.white,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => ThemeW()));
-                },
-              ),
-            ],
-          );
-          return Scaffold(
-              appBar: appBar,
-              body: SafeArea(
-                  child: Container(
-                      padding: EdgeInsets.all(10.0),
-                      height: (MediaQuery
-                          .of(context)
-                          .size
-                          .height -
+    return LayoutBuilder(builder: (ctx, constraints) {
+      final appBar = AppBar(
+        centerTitle: true,
+        title: Image.asset('assets/textlogo.png',
+            width: constraints.maxWidth * 0.2,
+            height: constraints.maxHeight * 0.05),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.brush),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ThemeW()));
+            },
+          ),
+        ],
+      );
+      return Scaffold(
+          appBar: appBar,
+          body: SafeArea(
+              child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  height: (MediaQuery.of(context).size.height -
                           appBar.preferredSize.height -
-                          MediaQuery
-                              .of(context)
-                              .padding
-                              .top) *
-                          1.2,
-                      decoration: BoxDecoration(
-                        gradient: new LinearGradient(
-                            colors: [
-                              Color(0xFFf2fbfc),
-                              Color(0xFFa4ced4),
-                            ],
-                            begin: const FractionalOffset(0.0, 1.0),
-                            end: const FractionalOffset(1.0, 0.0),
-                            stops: [0.0, 1.0],
-                            tileMode: TileMode.mirror),
-                      ),
+                          MediaQuery.of(context).padding.top) *
+                      1.2,
+                  decoration: BoxDecoration(
+                    gradient: new LinearGradient(
+                        colors: [
+                          Color(0xFFf2fbfc),
+                          Color(0xFFa4ced4),
+                        ],
+                        begin: const FractionalOffset(0.0, 1.0),
+                        end: const FractionalOffset(1.0, 0.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.mirror),
+                  ),
+                  child: SingleChildScrollView(
+      child: Column(children: <Widget>[
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          AdmobBanner(
+                            adUnitId: getBannerAdUnitId(),
+                            adSize: AdmobBannerSize.BANNER,
+                          ),
+                        ]),
+                    Column(
+                      //  mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          StreamBuilder<QuerySnapshot>(
+                              stream: Firestore.instance
+                                  .collection('quot')
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Container(
+                                      child: Center(child: Text("Loading")));
 
+                                }
+                                else {
+                                  mainList = snapshot.data.documents
+                                      .map((DocumentSnapshot docSnapshot) {
+                                    return docSnapshot.data.containsKey('text');
+                                  }).toList();
 
-                      child: Column(
-                          children: <Widget>[
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  AdmobBanner(
-                                    adUnitId: getBannerAdUnitId(),
-                                    adSize: AdmobBannerSize.BANNER,
-                                  ),
-                                ]),
+                                  snapshot.data.documents
+                                      .map((DocumentSnapshot docSnapshot) {
+                                    quoteList =
+                                        docSnapshot.data['text'].cast<String>();
+                                  });
 
-                            Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                  snapshot.data.documents
+                                      .map((DocumentSnapshot docSnapshot) {
+                                    saidList =
+                                        docSnapshot.data['said'].cast<String>();
+                                  });
 
-                                children: <Widget>[
-                                  StreamBuilder<QuerySnapshot>(
-                                      stream: Firestore.instance.collection(
-                                          'quot')
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return Container(
-                                              child: Center(
-                                                  child: Text("Loading")));
+                                  setList(quoteList);
+                                  return SingleChildScrollView (
+                                 child : carouselSlider = CarouselSlider(
+                                    options: CarouselOptions(
+                                       height: (MediaQuery
+                                           .of(context)
+                                           .size
+                                           .height -
+                                           appBar.preferredSize.height -
+                                           MediaQuery
+                                               .of(context)
+                                               .padding
+                                               .top) *
+                                           0.7,
+                                       initialPage: 0,
+                                      enlargeCenterPage: true,
+                                      autoPlay: true,
+                                       reverse: true,
+                                       enableInfiniteScroll: false,
+                                       autoPlayInterval: Duration(seconds: 5),
+                                       autoPlayAnimationDuration: Duration(milliseconds: 5000),
+                                       scrollDirection: Axis.horizontal,
+                                        onPageChanged: (index, reason) {
+                                          setState(() {
+                                            _current = index;
+                                            if (_current % 7 == 0 &&
+                                                showAd == false) {
+                                              loadAds();
+                                              showAd = true;
+                                            }
+                                          });
                                         }
 
-                                        mainList = snapshot.data.documents
-                                            .map((
-                                            DocumentSnapshot docSnapshot) {
-                                          return docSnapshot.data.containsKey(
-                                              'text');
-                                        }).toList();
+                                    ),
+                                        items: snapshot.data.documents.map((DocumentSnapshot document) {
+                                          // Map getDocs = document.data as Map;
+                                          isFavourite(document.documentID);
+                                          ScreenshotController screenshotController =
+                                          ScreenshotController();
 
-                                        snapshot.data.documents
-                                            .map((
-                                            DocumentSnapshot docSnapshot) {
-                                          quoteList =
-                                              docSnapshot.data['text'].cast<
-                                                  String>();
-                                        });
-
-                                        snapshot.data.documents
-                                            .map((
-                                            DocumentSnapshot docSnapshot) {
-                                          saidList =
-                                              docSnapshot.data['said'].cast<
-                                                  String>();
-                                        });
-
-                                        setList(quoteList);
-                                        return SingleChildScrollView(
-                                            child:
-                                            carouselSlider = CarouselSlider(
-                                              height: (MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .height -
-                                                  appBar.preferredSize.height -
-                                                  MediaQuery
-                                                      .of(context)
-                                                      .padding
-                                                      .top) *
-                                                  0.7,
-                                              initialPage: 0,
-                                              enlargeCenterPage: true,
-                                              autoPlay: true,
-                                              reverse: true,
-                                              enableInfiniteScroll: false,
-                                              autoPlayInterval: Duration(
-                                                  seconds: 5),
-                                              autoPlayAnimationDuration:
-                                              Duration(milliseconds: 5000),
-                                              pauseAutoPlayOnTouch: Duration(
-                                                  seconds: 10),
-                                              scrollDirection: Axis.horizontal,
-                                              onPageChanged: (index) {
-                                                setState(() {
-                                                  _current = index;
-                                                  if (_current % 7 == 0 &&
-                                                      showAd == false) {
-                                                    loadAds();
-                                                    showAd = true;
-                                                  }
-                                                });
-                                              },
-                                              items: snapshot.data.documents
-                                                  .map((
-                                                  DocumentSnapshot document) {
-                                                // Map getDocs = document.data as Map;
-                                                isFavourite(
-                                                    document.documentID);
-                                                ScreenshotController screenshotController =
-                                                ScreenshotController();
-
-                                                return Builder(
-                                                  builder: (
-                                                      BuildContext context) {
-                                                    return SingleChildScrollView(
-                                                        child: Container(
-                                                            height: (MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .height -
-                                                                appBar
-                                                                    .preferredSize
-                                                                    .height -
-                                                                MediaQuery
-                                                                    .of(context)
-                                                                    .padding
-                                                                    .top) *
-                                                                0.6,
-                                                            width:
-                                                            MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width,
-                                                            margin: EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 20.0),
+                                          return Builder(
+                                            builder: (BuildContext context) {
+                                              return SingleChildScrollView(
+                                                  child: Container(
+                                                      height: (MediaQuery
+                                                          .of(context)
+                                                          .size
+                                                          .height -
+                                                          appBar.preferredSize
+                                                              .height -
+                                                          MediaQuery
+                                                              .of(context)
+                                                              .padding
+                                                              .top) *
+                                                          0.6,
+                                                      width: MediaQuery
+                                                          .of(context)
+                                                          .size
+                                                          .width,
+                                                      margin: EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 20.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              images[
+                                                              backgroundIndex]),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                        children: <Widget>[
+                                                          Container(
+                                                            height: constraints
+                                                                .maxHeight *
+                                                                0.05,
                                                             decoration: BoxDecoration(
                                                               borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  15),
-                                                              image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    images[backgroundIndex]),
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                              new BorderRadius
+                                                                  .only(
+                                                                topLeft: const Radius
+                                                                    .circular(
+                                                                    15.0),
+                                                                topRight: const Radius
+                                                                    .circular(
+                                                                    15.0),
                                                               ),
                                                             ),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                              children: <
-                                                                  Widget>[
-                                                                Container(
-                                                                  height: constraints
-                                                                      .maxHeight *
-                                                                      0.05,
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                    new BorderRadius
-                                                                        .only(
-                                                                      topLeft:
-                                                                      const Radius
-                                                                          .circular(
-                                                                          15.0),
-                                                                      topRight:
-                                                                      const Radius
-                                                                          .circular(
-                                                                          15.0),
-                                                                    ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Screenshot(
+                                                              controller:
+                                                              screenshotController,
+                                                              child: Container(
+                                                                height: (MediaQuery
+                                                                    .of(
+                                                                    context)
+                                                                    .size
+                                                                    .height -
+                                                                    appBar
+                                                                        .preferredSize
+                                                                        .height -
+                                                                    MediaQuery
+                                                                        .of(
+                                                                        context)
+                                                                        .padding
+                                                                        .top) *
+                                                                    0.7,
+                                                                width:
+                                                                double.infinity,
+                                                                decoration:
+                                                                BoxDecoration(
+                                                                  image:
+                                                                  DecorationImage(
+                                                                    image: AssetImage(
+                                                                        images[
+                                                                        backgroundIndex]),
+                                                                    fit: BoxFit
+                                                                        .fill,
                                                                   ),
                                                                 ),
-                                                                Expanded(
-                                                                  child: Screenshot(
-                                                                    controller:
-                                                                    screenshotController,
-                                                                    child: Container(
-                                                                      height: (MediaQuery
-                                                                          .of(
-                                                                          context)
-                                                                          .size
-                                                                          .height -
-                                                                          appBar
-                                                                              .preferredSize
-                                                                              .height -
-                                                                          MediaQuery
-                                                                              .of(
-                                                                              context)
-                                                                              .padding
-                                                                              .top) *
-                                                                          0.7,
-                                                                      width: double
-                                                                          .infinity,
-                                                                      decoration: BoxDecoration(
-                                                                        image: DecorationImage(
-                                                                          image: AssetImage(
-                                                                              images[
-                                                                              backgroundIndex]),
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        ),
+                                                                child: Column(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Padding(
+                                                                        padding: EdgeInsets
+                                                                            .symmetric(
+                                                                            horizontal:
+                                                                            12.0,
+                                                                            vertical:
+                                                                            120.0),
+                                                                        child: Text(
+                                                                            document
+                                                                                .data[
+                                                                            'text'],
+                                                                            textAlign:
+                                                                            TextAlign
+                                                                                .center,
+                                                                            style: TextStyle(
+                                                                                color: Colors
+                                                                                    .white,
+                                                                                fontSize:
+                                                                                20.0,
+                                                                                fontFamily:
+                                                                                "Tajawal")),
                                                                       ),
-                                                                      child:
-                                                                      Column(
-                                                                          children: <
-                                                                              Widget>[
-                                                                            Padding(
-                                                                              padding:
-                                                                              EdgeInsets
-                                                                                  .symmetric(
-                                                                                  horizontal: 12.0,
-                                                                                  vertical: 120.0),
-                                                                              child: Text(
-                                                                                  document
-                                                                                      .data['text'],
-                                                                                  textAlign:
-                                                                                  TextAlign
-                                                                                      .center,
-                                                                                  style: TextStyle(
-                                                                                      color:
-                                                                                      Colors
-                                                                                          .white,
-                                                                                      fontSize: 20.0,
-                                                                                      fontFamily:
-                                                                                      "Tajawal")),
-                                                                            ),
-                                                                            Padding(
-                                                                              padding:
-                                                                              EdgeInsets
-                                                                                  .symmetric(
-                                                                                  horizontal: 12.0,
-                                                                                  vertical: 12.0),
-                                                                              child: Text(
-                                                                                  (document
-                                                                                      .data['said']),
-                                                                                  style: TextStyle(
-                                                                                      color:
-                                                                                      Colors
-                                                                                          .white,
-                                                                                      fontSize: 18.0,
-                                                                                      fontFamily:
-                                                                                      "Tajawal")),
-                                                                            ),
-                                                                          ]),
+                                                                      Padding(
+                                                                        padding: EdgeInsets
+                                                                            .symmetric(
+                                                                            horizontal:
+                                                                            12.0,
+                                                                            vertical:
+                                                                            12.0),
+                                                                        child: Text(
+                                                                            (document
+                                                                                .data[
+                                                                            'said']),
+                                                                            style: TextStyle(
+                                                                                color: Colors
+                                                                                    .white,
+                                                                                fontSize:
+                                                                                18.0,
+                                                                                fontFamily:
+                                                                                "Tajawal")),
+                                                                      ),
+                                                                    ]),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            height: constraints
+                                                                .maxHeight *
+                                                                0.05,
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              new BorderRadius
+                                                                  .only(
+                                                                bottomLeft:
+                                                                const Radius
+                                                                    .circular(
+                                                                    15.0),
+                                                                bottomRight:
+                                                                const Radius
+                                                                    .circular(
+                                                                    15.0),
+                                                              ),
+                                                              gradient:
+                                                              new LinearGradient(
+                                                                  colors: [
+                                                                    Color(
+                                                                        0x80000000),
+                                                                    Color(
+                                                                        0x00000000),
+                                                                  ],
+                                                                  begin:
+                                                                  const FractionalOffset(
+                                                                      1.0,
+                                                                      1.0),
+                                                                  end:
+                                                                  const FractionalOffset(
+                                                                      1.0,
+                                                                      0.0),
+                                                                  stops: [
+                                                                    0.0,
+                                                                    1.0
+                                                                  ],
+                                                                  tileMode:
+                                                                  TileMode
+                                                                      .clamp),
+                                                            ),
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .bottomCenter,
+                                                              child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    IconButton(
+                                                                      icon: Icon(
+                                                                          Icons
+                                                                              .share),
+                                                                      color: Colors
+                                                                          .white,
+                                                                      onPressed:
+                                                                          () async {
+                                                                        ScreenshotController
+                                                                        shot =
+                                                                            screenshotController;
+                                                                        shot
+                                                                            .capture(
+                                                                            pixelRatio:
+                                                                            2)
+                                                                            .then((
+                                                                            File
+                                                                            image) async {
+                                                                          _showDialog(
+                                                                              (document
+                                                                                  .data[
+                                                                              "text"]),
+                                                                              image
+                                                                                  .path);
+                                                                        })
+                                                                            .catchError(
+                                                                                (
+                                                                                onError) {
+                                                                              print(
+                                                                                  onError);
+                                                                            });
+                                                                      },
                                                                     ),
-                                                                  ),
-                                                                ),
-                                                                Container(
-                                                                  height: constraints
-                                                                      .maxHeight *
-                                                                      0.05,
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                    new BorderRadius
-                                                                        .only(
-                                                                      bottomLeft:
-                                                                      const Radius
-                                                                          .circular(
-                                                                          15.0),
-                                                                      bottomRight:
-                                                                      const Radius
-                                                                          .circular(
-                                                                          15.0),
-                                                                    ),
-                                                                    gradient: new LinearGradient(
-                                                                        colors: [
-                                                                          Color(
-                                                                              0x80000000),
-                                                                          Color(
-                                                                              0x00000000),
-                                                                        ],
-                                                                        begin:
-                                                                        const FractionalOffset(
-                                                                            1.0,
-                                                                            1.0),
-                                                                        end: const FractionalOffset(
-                                                                            1.0,
-                                                                            0.0),
-                                                                        stops: [
-                                                                          0.0,
-                                                                          1.0
-                                                                        ],
-                                                                        tileMode: TileMode
-                                                                            .clamp),
-                                                                  ),
-                                                                  child: Align(
-                                                                    alignment:
-                                                                    Alignment
-                                                                        .bottomCenter,
-                                                                    child: Row(
-                                                                        children: <
-                                                                            Widget>[
-                                                                          IconButton(
-                                                                            icon: Icon(
-                                                                                Icons
-                                                                                    .share),
-                                                                            color: Colors
-                                                                                .white,
-                                                                            onPressed: () async {
-                                                                              ScreenshotController
-                                                                              shot =
-                                                                                  screenshotController;
-                                                                              shot
-                                                                                  .capture(
-                                                                                  pixelRatio: 2)
-                                                                                  .then((
-                                                                                  File
-                                                                                  image) async {
-                                                                                _showDialog(
-                                                                                    (document
-                                                                                        .data["text"]),
-                                                                                    image
-                                                                                        .path);
-                                                                              })
-                                                                                  .catchError((
-                                                                                  onError) {
-                                                                                print(
-                                                                                    onError);
-                                                                              });
-                                                                            },
-                                                                          ),
-                                                                          FutureBuilder<
-                                                                              bool>(
-                                                                              future: isFavourite(
-                                                                                  document
-                                                                                      .documentID),
-                                                                              builder: (
-                                                                                  BuildContext
-                                                                                  context,
-                                                                                  AsyncSnapshot<
-                                                                                      bool>
-                                                                                  snapshot) {
-                                                                                if (snapshot
-                                                                                    .hasData) {
+                                                                    FutureBuilder<
+                                                                        bool>(
+                                                                        future: isFavourite(
+                                                                            document
+                                                                                .documentID),
+                                                                        builder: (
+                                                                            BuildContext
+                                                                            context,
+                                                                            AsyncSnapshot<
+                                                                                bool>
+                                                                            snapshot) {
+                                                                          if (snapshot
+                                                                              .hasData) {
+                                                                            if (snapshot
+                                                                                .data ==
+                                                                                true)
+                                                                              iconData =
+                                                                                  Icons
+                                                                                      .favorite;
+                                                                            else
+                                                                              iconData =
+                                                                                  Icons
+                                                                                      .favorite_border;
+
+                                                                            return IconButton(
+                                                                                icon: Icon(
+                                                                                    iconData),
+                                                                                color: Colors
+                                                                                    .white,
+                                                                                onPressed:
+                                                                                    () async {
+                                                                                  QuoteModel
+                                                                                  addToFav =
+                                                                                  QuoteModel(
+                                                                                      id: document
+                                                                                          .documentID
+                                                                                          .toString(),
+                                                                                      quote: (document
+                                                                                          .data['text']),
+                                                                                      said: (document
+                                                                                          .data['said']));
                                                                                   if (snapshot
-                                                                                      .data ==
-                                                                                      true)
+                                                                                      .data) {
+                                                                                    await DatabaseProvider
+                                                                                        .db
+                                                                                        .deleteQuoteById(
+                                                                                        document
+                                                                                            .documentID);
+                                                                                  } else {
+                                                                                    await DatabaseProvider
+                                                                                        .db
+                                                                                        .addQuote(
+                                                                                        addToFav);
+                                                                                  }
+
+                                                                                  setState(() {
                                                                                     iconData =
+                                                                                    snapshot
+                                                                                        .data
+                                                                                        ? Icons
+                                                                                        .favorite_border
+                                                                                        : iconData =
                                                                                         Icons
                                                                                             .favorite;
-                                                                                  else
-                                                                                    iconData =
-                                                                                        Icons
-                                                                                            .favorite_border;
-
-                                                                                  return IconButton(
-                                                                                      icon: Icon(
-                                                                                          iconData),
-                                                                                      color:
-                                                                                      Colors
-                                                                                          .white,
-                                                                                      onPressed:
-                                                                                          () async {
-                                                                                        QuoteModel addToFav = QuoteModel(
-                                                                                            id: document
-                                                                                                .documentID
-                                                                                                .toString(),
-                                                                                            quote: (document
-                                                                                                .data[
-                                                                                            'text']),
-                                                                                            said: (document
-                                                                                                .data[
-                                                                                            'said']));
-                                                                                        if (snapshot
-                                                                                            .data) {
-                                                                                          await DatabaseProvider
-                                                                                              .db
-                                                                                              .deleteQuoteById(
-                                                                                              document
-                                                                                                  .documentID);
-                                                                                        } else {
-                                                                                          await DatabaseProvider
-                                                                                              .db
-                                                                                              .addQuote(
-                                                                                              addToFav);
-                                                                                        }
-
-                                                                                        setState(() {
-                                                                                          iconData =
-                                                                                          snapshot
-                                                                                              .data
-                                                                                              ? Icons
-                                                                                              .favorite_border
-                                                                                              : iconData =
-                                                                                              Icons
-                                                                                                  .favorite;
-                                                                                        });
-                                                                                      });
-                                                                                } else {
-                                                                                  return new CircularProgressIndicator();
-                                                                                }
-                                                                              })
-                                                                        ]),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            )));
-                                                  },
-                                                );
-                                              }).toList(),
-                                            ));
-                                      }),
-
-                                ])
-                          ])
-                  )));
-        });
+                                                                                  });
+                                                                                });
+                                                                          } else {
+                                                                            return new CircularProgressIndicator();
+                                                                          }
+                                                                        })
+                                                                  ]),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      )));
+                                            },
+                                          );
+                                        }).toList(),
+                                      ));
+                                }}),
+                        ])
+                  ])))));
+    });
   }
 
   screenShot(String text, ScreenshotController screenshotController) {
